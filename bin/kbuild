@@ -1,0 +1,81 @@
+#!/usr/bin/env python
+
+import subprocess
+import argparse
+import sys
+from  os import path
+import yaml
+from termcolor import colored
+
+CALCDEPS_PATH = path.join(path.dirname(__file__), '..', 'lib/closure/calcdeps.py')
+COMPILER_PATH = path.join(path.dirname(__file__), '..', 'lib/closure-compiler-svn1307.jar')
+
+def get_compiler_flags():
+    compilerflags = ["--compilation_level=ADVANCED_OPTIMIZATIONS"]
+    compilerflags += ["--summary_detail_level=3"]
+    compilerflags += ["--warning_level=VERBOSE"]
+    compilerflags += ['--jscomp_warning=checkTypes']
+    return compilerflags
+
+def make_deps(base_path, js_paths, deps_path, **args):
+    command = ['python', CALCDEPS_PATH]
+    command += ['--dep', base_path]
+    command += ["-o", 'deps']
+    
+    for path in js_paths:
+        command += ['-p', path]
+    
+    command += ["--output_file", deps_path]
+    
+    subprocess.Popen(command, stdout=sys.stdout).communicate()
+
+def compile(base_path, js_paths, inputs, compile_path, externs, **args):
+    command = ['python', CALCDEPS_PATH]
+    command += ['-o', 'compiled']
+    command += ['--compiler_jar', COMPILER_PATH]
+
+    for flag in get_compiler_flags():
+        command += ['-f', flag]
+    
+    for extern in externs:
+        command += ['-f', "--externs=%s" % extern]
+    
+    for path in js_paths:
+        command += ['-p', path]
+
+    for path in inputs:
+        command += ['-i', path]
+    
+    print command
+    command += ["--output_file", compile_path]
+    
+    subprocess.Popen(command, stdout=sys.stdout).communicate()
+
+def main():
+    parser = argparse.ArgumentParser(description='Prepare a closure-based javascript set.')
+
+    parser.add_argument('--buildfile',
+        default='default.kbuild',
+        help='the file to parse')
+
+    parser.add_argument('--target',
+        default='deps',
+        choices=['deps','compile'],
+        help='specify to either create a deps file or to compile')    
+
+    args = parser.parse_args()
+
+    try:
+        with open(args.buildfile) as bf:
+            ybf = yaml.load(bf)
+    except Exception as err:
+        print colored(err, 'red')
+        sys.exit(1)
+
+    if args.target == 'deps':
+        make_deps(**ybf)
+    elif args.target == 'compile':
+        compile(**ybf)
+
+if __name__ == '__main__':
+  main()
