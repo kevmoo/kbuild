@@ -5,7 +5,6 @@ import argparse
 import sys
 from  os import path
 import yaml
-from termcolor import colored
 
 CALCDEPS_PATH = path.join(path.dirname(__file__), '..', 'lib/closure/calcdeps.py')
 COMPILER_PATH = path.join(path.dirname(__file__), '..', 'lib/closure-compiler-svn1307.jar')
@@ -29,7 +28,7 @@ def make_deps(base_path, js_paths, deps_path, **args):
     
     subprocess.Popen(command, stdout=sys.stdout).communicate()
 
-def compile(base_path, js_paths, inputs, compile_path, externs, **args):
+def compile(base_path, js_paths, inputs, compile_path, externs = [], **args):
     command = ['python', CALCDEPS_PATH]
     command += ['-o', 'compiled']
     command += ['--compiler_jar', COMPILER_PATH]
@@ -69,7 +68,7 @@ def main():
         with open(args.buildfile) as bf:
             ybf = yaml.load(bf)
     except Exception as err:
-        print colored(err, 'red')
+        print err
         sys.exit(1)
 
     if args.target == 'deps':
