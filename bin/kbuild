@@ -6,9 +6,10 @@ import sys
 from  os import path
 import yaml
 
-CALCDEPS_PATH = path.join(path.dirname(__file__), '..', 'lib/closure/calcdeps.py')
-COMPILER_PATH = path.join(path.dirname(__file__), '..', 'lib/closure-compiler-svn1325.jar')
-SILLY_PATH    = path.join(path.dirname(__file__), '..', 'lib/silly.js')
+LIB_DIR       = path.join(path.dirname(__file__), '../lib')
+CALCDEPS_PATH = path.join(LIB_DIR, 'closure/calcdeps.py')
+COMPILER_PATH = path.join(LIB_DIR, 'closure-compiler-svn1325.jar')
+SILLY_PATH    = path.join(LIB_DIR, 'silly.js')
 
 def get_compiler_flags():
     compilerflags = ["--compilation_level=ADVANCED_OPTIMIZATIONS"]
