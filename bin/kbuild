@@ -7,7 +7,7 @@ from  os import path
 import yaml
 
 CALCDEPS_PATH = path.join(path.dirname(__file__), '..', 'lib/closure/calcdeps.py')
-COMPILER_PATH = path.join(path.dirname(__file__), '..', 'lib/closure-compiler-svn1307.jar')
+COMPILER_PATH = path.join(path.dirname(__file__), '..', 'lib/closure-compiler-svn1325.jar')
 
 def get_compiler_flags():
     compilerflags = ["--compilation_level=ADVANCED_OPTIMIZATIONS"]
