@@ -11,6 +11,9 @@ CALCDEPS_PATH = path.join(LIB_DIR, 'closure/calcdeps.py')
 COMPILER_PATH = path.join(LIB_DIR, 'closure-compiler-svn1325.jar')
 SILLY_PATH    = path.join(LIB_DIR, 'silly.js')
 
+def execute_command(command):
+  subprocess.Popen(command, stdout=sys.stdout).communicate()
+
 def get_compiler_flags():
     compilerflags = ["--compilation_level=ADVANCED_OPTIMIZATIONS"]
     compilerflags += ["--summary_detail_level=3"]
@@ -29,7 +32,7 @@ def make_deps(base_path, js_paths, deps_path, **args):
     
     command += ["--output_file", deps_path]
     
-    subprocess.Popen(command, stdout=sys.stdout).communicate()
+    execute_command(command)
 
 def compile(base_path, js_paths, inputs, compile_path, externs = [], **args):
     command = ['python', CALCDEPS_PATH]
@@ -48,10 +51,9 @@ def compile(base_path, js_paths, inputs, compile_path, externs = [], **args):
     for path in inputs:
         command += ['-i', path]
     
-    print command
     command += ["--output_file", compile_path]
     
-    subprocess.Popen(command, stdout=sys.stdout).communicate()
+    execute_command(command)
 
 def main():
     parser = argparse.ArgumentParser(description='Prepare a closure-based javascript set.')
