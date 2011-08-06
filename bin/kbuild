@@ -8,12 +8,14 @@ import yaml
 
 CALCDEPS_PATH = path.join(path.dirname(__file__), '..', 'lib/closure/calcdeps.py')
 COMPILER_PATH = path.join(path.dirname(__file__), '..', 'lib/closure-compiler-svn1325.jar')
+SILLY_PATH    = path.join(path.dirname(__file__), '..', 'lib/silly.js')
 
 def get_compiler_flags():
     compilerflags = ["--compilation_level=ADVANCED_OPTIMIZATIONS"]
     compilerflags += ["--summary_detail_level=3"]
     compilerflags += ["--warning_level=VERBOSE"]
     compilerflags += ['--jscomp_warning=checkTypes']
+    compilerflags += ['--js=%s' % SILLY_PATH]
     return compilerflags
 
 def make_deps(base_path, js_paths, deps_path, **args):
