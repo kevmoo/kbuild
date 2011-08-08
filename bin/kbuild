@@ -4,6 +4,7 @@ import subprocess
 import argparse
 import sys
 from  os import path
+import inspect
 import yaml
 
 LIB_DIR       = path.join(path.dirname(__file__), '../lib')
@@ -25,7 +26,7 @@ def get_compiler_flags(debug = False):
         compilerflags += ['--debug', '--formatting=PRETTY_PRINT', '--formatting=PRINT_INPUT_DELIMITER']
     return compilerflags
 
-def make_deps(base_path, js_paths, deps_path, **args):
+def make_deps(base_path, js_paths, deps_path):
     command = ['python', CALCDEPS_PATH]
     command += ['--dep', base_path]
     command += ["-o", 'deps']
@@ -37,7 +38,7 @@ def make_deps(base_path, js_paths, deps_path, **args):
     
     execute_command(command)
 
-def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = False, **args):
+def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = False):
     command = ['python', CALCDEPS_PATH]
     command += ['-o', 'compiled']
     command += ['--compiler_jar', COMPILER_PATH]
@@ -57,6 +58,34 @@ def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = Fal
     command += ["--output_file", compile_path]
     
     execute_command(command)
+
+def invoke_command(function, args):
+    argspec = inspect.getargspec(function)
+    defined_args = argspec.args
+
+    # remove args that are not needed by the desired command
+    for key in args.keys():
+        if key not in defined_args:
+            del args[key]
+
+    # arguments requiring values are in the range
+    # 0 to (n-k)
+    #    where n is the length of the args
+    #    and k is the number of args with default values
+    if argspec.defaults:
+        required_args = defined_args[0:-len(argspec.defaults)]
+    else:
+        required_args = defined_args
+
+    # make sure required args are present
+    # or exit!
+    for key in required_args:
+        if key not in args:
+            print "missing '%s', yo" % key
+            sys.exit(1)
+
+    # Call function with the right args and only the right args
+    function(**args)
 
 def main():
     parser = argparse.ArgumentParser(description='Prepare a closure-based javascript set.')
@@ -83,10 +112,17 @@ def main():
         print err
         sys.exit(1)
 
+    ybf['debug'] = args.debug
+
     if args.target == 'deps':
-        make_deps(**ybf)
+        func = make_deps
     elif args.target == 'compile':
-        compile(debug=args.debug, **ybf)
+        func = compile
+    else:
+        print "Not sure what to do..."
+        sys.exit(1)
+
+    invoke_command(func, ybf)
 
 if __name__ == '__main__':
   main()
