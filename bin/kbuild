@@ -15,7 +15,7 @@ SILLY_PATH    = path.join(LIB_DIR, 'silly.js')
 def execute_command(command):
   subprocess.Popen(command, stdout=sys.stdout).communicate()
 
-def get_compiler_flags(debug = False):
+def get_compiler_flags(debug = False, closure_entry_point = None):
     compilerflags  = []
     compilerflags += ["--compilation_level=ADVANCED_OPTIMIZATIONS"]
     compilerflags += ["--summary_detail_level=3"]
@@ -24,6 +24,8 @@ def get_compiler_flags(debug = False):
     compilerflags += ['--js=%s' % SILLY_PATH]
     if debug:
         compilerflags += ['--debug', '--formatting=PRETTY_PRINT', '--formatting=PRINT_INPUT_DELIMITER']
+    if closure_entry_point:
+        compilerflags += ['--closure_entry_point=%s' % closure_entry_point]
     return compilerflags
 
 def make_deps(base_path, js_paths, deps_path):
@@ -38,12 +40,12 @@ def make_deps(base_path, js_paths, deps_path):
     
     execute_command(command)
 
-def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = False):
+def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = False, closure_entry_point = None):
     command = ['python', CALCDEPS_PATH]
     command += ['-o', 'compiled']
     command += ['--compiler_jar', COMPILER_PATH]
 
-    for flag in get_compiler_flags(debug):
+    for flag in get_compiler_flags(debug, closure_entry_point):
         command += ['-f', flag]
     
     for extern in externs:
