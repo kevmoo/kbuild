@@ -98,8 +98,8 @@ def main():
 
     parser.add_argument('--target',
         default='deps',
-        choices=['deps','compile'],
-        help='specify to either create a deps file or to compile')    
+        choices=['deps','compile','both'],
+        help='specify to either create a deps file, compile, or both')
 
     parser.add_argument('--debug',
         action='store_true',
@@ -117,14 +117,17 @@ def main():
     ybf['debug'] = args.debug
 
     if args.target == 'deps':
-        func = make_deps
+        funcs = [make_deps]
     elif args.target == 'compile':
-        func = compile
+        funcs = [compile]
+    elif args.target =='both':
+        funcs = [make_deps, compile]
     else:
         print "Not sure what to do..."
         sys.exit(1)
 
-    invoke_command(func, ybf)
+    for func in funcs:
+        invoke_command(func, ybf.copy())
 
 if __name__ == '__main__':
   main()
