@@ -9,7 +9,7 @@ import yaml
 
 LIB_DIR       = path.join(path.dirname(__file__), '../lib')
 CALCDEPS_PATH = path.join(LIB_DIR, 'closure/calcdeps.py')
-COMPILER_PATH = path.join(LIB_DIR, 'closure-compiler-svn1340.jar')
+COMPILER_PATH = path.join(LIB_DIR, 'closure-compiler-svn1362.jar')
 SILLY_PATH    = path.join(LIB_DIR, 'silly.js')
 
 def execute_command(command):
