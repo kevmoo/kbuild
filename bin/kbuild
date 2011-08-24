@@ -14,7 +14,7 @@ COMPILER_PATH = path.join(LIB_DIR, 'closure-compiler-svn1362.jar')
 def execute_command(command):
   subprocess.Popen(command, stdout=sys.stdout).communicate()
 
-def get_compiler_flags(base_path, debug = False, closure_entry_point = None):
+def get_compiler_flags(base_path, debug = False, closure_entry_point = None, language_in = None):
     compilerflags  = []
     compilerflags += ["--compilation_level=ADVANCED_OPTIMIZATIONS"]
     compilerflags += ["--summary_detail_level=3"]
@@ -25,6 +25,8 @@ def get_compiler_flags(base_path, debug = False, closure_entry_point = None):
         compilerflags += ['--debug', '--formatting=PRETTY_PRINT', '--formatting=PRINT_INPUT_DELIMITER']
     if closure_entry_point:
         compilerflags += ['--closure_entry_point=%s' % closure_entry_point]
+    if language_in:
+        compilerflags += ['--language_in=%s' % language_in]
 
     # to eliminate errors about unfound closure dependencies
     # http://groups.google.com/group/closure-compiler-discuss/msg/7d089cc101a2cf00?pli=1
@@ -47,12 +49,12 @@ def make_deps(base_path, js_paths, deps_path):
     
     execute_command(command)
 
-def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = False, closure_entry_point = None):
+def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = False, closure_entry_point = None, language_in = None):
     command = ['python', CALCDEPS_PATH]
     command += ['-o', 'compiled']
     command += ['--compiler_jar', COMPILER_PATH]
 
-    for flag in get_compiler_flags(base_path, debug, closure_entry_point):
+    for flag in get_compiler_flags(base_path, debug, closure_entry_point, language_in):
         command += ['-f', flag]
     
     for extern in externs:
@@ -112,6 +114,11 @@ def main():
         action='store_true',
         help='enable debug output when in compile mode')
 
+    parser.add_argument('--language_in',
+        default='ECMASCRIPT5_STRICT',
+        choices=['ECMASCRIPT3', 'ECMASCRIPT5', 'ECMASCRIPT5_STRICT'],
+        help='Sets what language spec that input sources conform.')
+
     args = parser.parse_args()
 
     try:
@@ -122,6 +129,7 @@ def main():
         sys.exit(1)
 
     ybf['debug'] = args.debug
+    ybf['language_in'] = args.language_in
 
     if args.target == 'deps':
         funcs = [make_deps]
