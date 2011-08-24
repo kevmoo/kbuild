@@ -20,6 +20,7 @@ def get_compiler_flags(base_path, debug = False, closure_entry_point = None, lan
     compilerflags += ["--summary_detail_level=3"]
     compilerflags += ["--warning_level=VERBOSE"]
     compilerflags += ['--jscomp_warning=checkTypes']
+    compilerflags += ['--generate_exports']
 
     if debug:
         compilerflags += ['--debug', '--formatting=PRETTY_PRINT', '--formatting=PRINT_INPUT_DELIMITER']
