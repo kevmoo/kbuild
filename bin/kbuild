@@ -10,22 +10,29 @@ import yaml
 LIB_DIR       = path.join(path.dirname(__file__), '../lib')
 CALCDEPS_PATH = path.join(LIB_DIR, 'closure/calcdeps.py')
 COMPILER_PATH = path.join(LIB_DIR, 'closure-compiler-svn1362.jar')
-SILLY_PATH    = path.join(LIB_DIR, 'compiler_warning_overrides.js')
 
 def execute_command(command):
   subprocess.Popen(command, stdout=sys.stdout).communicate()
 
-def get_compiler_flags(debug = False, closure_entry_point = None):
+def get_compiler_flags(base_path, debug = False, closure_entry_point = None):
     compilerflags  = []
     compilerflags += ["--compilation_level=ADVANCED_OPTIMIZATIONS"]
     compilerflags += ["--summary_detail_level=3"]
     compilerflags += ["--warning_level=VERBOSE"]
     compilerflags += ['--jscomp_warning=checkTypes']
-    compilerflags += ['--js=%s' % SILLY_PATH]
+
     if debug:
         compilerflags += ['--debug', '--formatting=PRETTY_PRINT', '--formatting=PRINT_INPUT_DELIMITER']
     if closure_entry_point:
         compilerflags += ['--closure_entry_point=%s' % closure_entry_point]
+
+    # to eliminate errors about unfound closure dependencies
+    # http://groups.google.com/group/closure-compiler-discuss/msg/7d089cc101a2cf00?pli=1
+    # http://code.google.com/p/closure-library/issues/detail?id=142
+    deps_path = path.join(base_path, 'goog', 'deps.js')
+    if path.isfile(deps_path):
+        compilerflags += ['--js=%s' % deps_path]
+
     return compilerflags
 
 def make_deps(base_path, js_paths, deps_path):
@@ -45,7 +52,7 @@ def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = Fal
     command += ['-o', 'compiled']
     command += ['--compiler_jar', COMPILER_PATH]
 
-    for flag in get_compiler_flags(debug, closure_entry_point):
+    for flag in get_compiler_flags(base_path, debug, closure_entry_point):
         command += ['-f', flag]
     
     for extern in externs:
