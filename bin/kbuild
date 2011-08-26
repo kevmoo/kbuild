@@ -102,14 +102,14 @@ def invoke_command(function, args):
 def main():
     parser = argparse.ArgumentParser(description='Prepare a closure-based javascript set.')
 
+    parser.add_argument('target',
+        default='deps',
+        choices=['deps','compile','both','fix'],
+        help='specify to either create a deps file, compile, or both')
+
     parser.add_argument('--buildfile',
         default='default.kbuild',
         help='the file to parse')
-
-    parser.add_argument('--target',
-        default='deps',
-        choices=['deps','compile','both'],
-        help='specify to either create a deps file, compile, or both')
 
     parser.add_argument('--debug',
         action='store_true',
