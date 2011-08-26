@@ -12,7 +12,7 @@ CALCDEPS_PATH = path.join(LIB_DIR, 'closure/calcdeps.py')
 COMPILER_PATH = path.join(LIB_DIR, 'closure-compiler-svn1394.jar')
 
 def execute_command(command):
-  subprocess.Popen(command, stdout=sys.stdout).communicate()
+    subprocess.Popen(command, stdout=sys.stdout).communicate()
 
 def get_compiler_flags(base_path, debug = False, closure_entry_point = None, language_in = None):
     compilerflags  = []
@@ -48,6 +48,31 @@ def make_deps(base_path, js_paths, deps_path):
     
     command += ["--output_file", deps_path]
     
+    execute_command(command)
+
+def fix(fix_paths, fix_exclude_paths):
+    # TODO: actually check to see if fixjsstyle exists?
+    command = ['fixjsstyle']
+
+    for p in fix_paths:
+        if path.isfile(p):
+            command += [p]
+        elif path.isdir(p):
+            command += ['-r', p]
+
+    exclude_dirs = []
+    exclude_files = []
+    for p in fix_exclude_paths:
+        if path.isfile(p):
+            exclude_files += [p]
+        elif path.isdir(p):
+            exclude_dirs += [p]
+
+    if any(exclude_files):
+        command += ['-x', ','.join(exclude_files)]
+    if any(exclude_dirs):
+        command += ['-e', ','.join(exclude_dirs)]
+
     execute_command(command)
 
 def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = False, closure_entry_point = None, language_in = None):
@@ -136,8 +161,10 @@ def main():
         funcs = [make_deps]
     elif args.target == 'compile':
         funcs = [compile]
-    elif args.target =='both':
+    elif args.target == 'both':
         funcs = [make_deps, compile]
+    elif args.target == 'fix':
+        funcs = [fix]
     else:
         print "Not sure what to do..."
         sys.exit(1)
