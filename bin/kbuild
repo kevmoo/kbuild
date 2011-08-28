@@ -76,6 +76,31 @@ def fix(fix_paths, fix_exclude_paths = []):
 
     execute_command(command)
 
+def lint(fix_paths, fix_exclude_paths = []):
+    # TODO: actually check to see if gjslint exists?
+    command = ['gjslint']
+
+    for p in fix_paths:
+        if path.isfile(p):
+            command += [p]
+        elif path.isdir(p):
+            command += ['-r', p]
+
+    exclude_dirs = []
+    exclude_files = []
+    for p in fix_exclude_paths:
+        if path.isfile(p):
+            exclude_files += [p]
+        elif path.isdir(p):
+            exclude_dirs += [p]
+
+    if any(exclude_files):
+        command += ['-x', ','.join(exclude_files)]
+    if any(exclude_dirs):
+        command += ['-e', ','.join(exclude_dirs)]
+
+    execute_command(command)
+
 def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = False, closure_entry_point = None, language_in = None):
     command = ['python', CALCDEPS_PATH]
     command += ['-o', 'compiled']
@@ -130,7 +155,7 @@ def main():
 
     parser.add_argument('target',
         default='deps',
-        choices=['deps','compile','both','fix'],
+        choices=['deps','compile','both','fix','lint'],
         help='specify to either create a deps file, compile, or both')
 
     parser.add_argument('--buildfile',
@@ -166,6 +191,8 @@ def main():
         funcs = [make_deps, compile]
     elif args.target == 'fix':
         funcs = [fix]
+    elif args.target == 'lint':
+        funcs = [lint]
     else:
         print "Not sure what to do..."
         sys.exit(1)
