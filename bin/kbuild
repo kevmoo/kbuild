@@ -154,6 +154,7 @@ def main():
 
     parser.add_argument('target',
         default='deps',
+        nargs = '?',
         choices=['deps','compile','both','fix','lint'],
         help='specify to either create a deps file, compile, or both')
 
