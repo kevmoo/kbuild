@@ -54,11 +54,14 @@ def fix(fix_paths, fix_exclude_paths = []):
     # TODO: actually check to see if fixjsstyle exists?
     command = ['fixjsstyle']
 
+    fix_files = []
+    fix_dirs = []
+
     for p in fix_paths:
         if path.isfile(p):
-            command += [p]
+            fix_files += [p]
         elif path.isdir(p):
-            command += ['-r', p]
+            fix_dirs += ['-r', p]
 
     exclude_dirs = []
     exclude_files = []
@@ -72,6 +75,8 @@ def fix(fix_paths, fix_exclude_paths = []):
         command += ['-x', ','.join(exclude_files)]
     if any(exclude_dirs):
         command += ['-e', ','.join(exclude_dirs)]
+    command += fix_dirs
+    command += fix_files
 
     execute_command(command)
 
