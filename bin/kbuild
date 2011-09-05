@@ -7,7 +7,7 @@ from  os import path
 import inspect
 import yaml
 
-THIS_DIR      = path.dirname(__file__)
+THIS_DIR      = path.dirname(path.realpath(__file__))
 CALCDEPS_PATH = path.join(THIS_DIR, '..', 'lib', 'calcdeps.py')
 COMPILER_PATH = path.join(THIS_DIR, '..', 'libexec', 'closure-compiler-svn1394.jar')
 
