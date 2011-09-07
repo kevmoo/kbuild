@@ -8,8 +8,8 @@ import inspect
 import yaml
 
 THIS_DIR      = path.dirname(path.realpath(__file__))
-CALCDEPS_PATH = path.join(THIS_DIR, '..', 'lib', 'calcdeps.py')
-COMPILER_PATH = path.join(THIS_DIR, '..', 'libexec', 'closure-compiler-svn1412.jar')
+CALCDEPS_PATH = path.abspath(path.join(THIS_DIR, '..', 'lib', 'calcdeps.py'))
+COMPILER_PATH = path.abspath(path.join(THIS_DIR, '..', 'libexec', 'closure-compiler-svn1412.jar'))
 
 def execute_command(command):
     subprocess.Popen(command, stdout=sys.stdout).communicate()
