@@ -1,16 +1,17 @@
-Tools to make using Google Closure easier.
+# kbuild
 
-This is a work in progress. Stay tuned...
+Tools to make using [Google Closure Tools](http://code.google.com/closure/) easier.  
+By [Kevin Moore](http://j832.com)
 
-## Requirements
+### Requirements
 
-* Java
-* Python
-  * yaml - `pip install PyYAML`
-  * closure_linter (optional) - `pip install http://closure-linter.googlecode.com/files/closure_linter-2.3.tar.gz`
-    * enables `fix` and `lint`
+* **java**
+* **python**
+    * **yaml** - `pip install PyYAML`
+    * **closure_linter** (optional) - `pip install http://closure-linter.googlecode.com/files/closure_linter-2.3.tar.gz`
+        * enables `kbuild fix` and `kbuild lint`
 
-# Used in:
+### Used in
 
 * The [Box2d Demo site](https://github.com/thinkpixellab/box2dWeb)
 * [Agent 008 Ball](https://github.com/thinkpixellab/agent8ball)
