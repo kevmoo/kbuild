@@ -1,7 +1,8 @@
 require 'formula'
 
 class Kbuild < Formula
-  head 'git://github.com/kevmoo/kbuild.git'
+  homepage 'https://github.com/kevmoo/kbuild'
+  head 'https://github.com/kevmoo/kbuild.git', :using => :git
 
   depends_on 'yaml' => :python
 
