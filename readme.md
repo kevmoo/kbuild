@@ -51,3 +51,17 @@ If you're cloning these locally, make sure you sync up all of the submodules bef
 * [ThinkQR](https://github.com/thinkpixellab/thinkqr)
 * The [Box2d Demo site](https://github.com/thinkpixellab/box2dWeb)
 * [Agent 008 Ball](https://github.com/thinkpixellab/agent8ball)
+
+### default.kbuild file from ThinkQR
+
+    inputs:
+      - js/app/application.js
+    base_path: js/closure/closure
+    js_paths:
+      - js/app
+      - js/pl/src
+      - js/closure/closure
+    deps_path: js/deps.js
+    compile_path: js/compiled.js
+    externs:
+      - js/externs/jquery-1.6.js
