@@ -4,13 +4,21 @@ class Kbuild < Formula
   homepage 'https://github.com/kevmoo/kbuild'
   head 'https://github.com/kevmoo/kbuild.git', :using => :git
 
-  # You'll need to install yaml for Python
-  #
-  # If you have pip installed: (http://www.pip-installer.org/)
-  # `pip install PyYAML`
   depends_on 'yaml' => :python
 
   def install
     prefix.install Dir['*']
   end
+
+  def caveats; <<-EOS.undent
+    You also need:
+    * java - Tested with 1.6
+    * python - 2.7 is required
+      * yaml - `pip install PyYAML`
+      * closure_linter (optional)
+        * enables `kbuild fix` and `kbuild lint`
+        * `pip install http://closure-linter.googlecode.com/files/closure_linter-2.3.tar.gz`
+    EOS
+  end
+
 end
