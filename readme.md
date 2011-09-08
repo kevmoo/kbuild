@@ -5,8 +5,8 @@ By [Kevin Moore](http://j832.com)
 
 ### Requirements
 
-* **java**
-* **python**
+* **java** - Tested with 1.6
+* **python** - 2.7 is required
     * **yaml** - `pip install PyYAML`
     * **closure_linter** (optional) - `pip install http://closure-linter.googlecode.com/files/closure_linter-2.3.tar.gz`
         * enables `kbuild fix` and `kbuild lint`
