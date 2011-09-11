@@ -21,6 +21,18 @@ def get_compiler_flags(base_path, debug = False, closure_entry_point = None, lan
     compilerflags += ["--warning_level=VERBOSE"]
     compilerflags += ['--jscomp_warning=checkTypes']
     compilerflags += ['--generate_exports']
+    compilerflags += ['--jscomp_error=checkRegExp']
+    compilerflags += ['--jscomp_error=checkVars']
+    compilerflags += ['--jscomp_error=deprecated']
+    compilerflags += ['--jscomp_error=invalidCasts']
+    compilerflags += ['--jscomp_error=missingProperties']
+    compilerflags += ['--jscomp_error=undefinedVars']
+    compilerflags += ['--jscomp_error=visibility']
+    compilerflags += ['--jscomp_warning=accessControls']
+    compilerflags += ['--jscomp_warning=fileoverviewTags']
+    compilerflags += ['--jscomp_warning=nonStandardJsDocs']
+    compilerflags += ['--jscomp_warning=strictModuleDepCheck']
+    compilerflags += ['--jscomp_warning=unknownDefines']
 
     if debug:
         compilerflags += ['--debug', '--formatting=PRETTY_PRINT', '--formatting=PRINT_INPUT_DELIMITER']
