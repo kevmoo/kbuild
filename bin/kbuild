@@ -12,8 +12,7 @@ LIBEXEC_DIR   = path.abspath(path.join(path.dirname(path.realpath(__file__)), '.
 CALCDEPS_PATH = path.join(LIBEXEC_DIR, 'calcdeps.py')
 COMPILER_PATH = path.join(LIBEXEC_DIR, 'closure-compiler-svn1412.jar')
 
-def execute_command(command, message):
-    print colored('kbuild: ' + message, 'green')
+def execute_command(command):
     subprocess.Popen(command, stdout=sys.stdout).communicate()
 
 def get_compiler_flags(base_path, debug = False, closure_entry_point = None, language_in = None):
@@ -62,7 +61,7 @@ def make_deps(base_path, js_paths, deps_path):
     
     command += ["--output_file", deps_path]
     
-    execute_command(command, 'deps')
+    execute_command(command)
 
 def fix(fix_paths, fix_exclude_paths = []):
     # TODO: actually check to see if fixjsstyle exists?
@@ -92,7 +91,7 @@ def fix(fix_paths, fix_exclude_paths = []):
     command += fix_dirs
     command += fix_files
 
-    execute_command(command, 'fixjsstyle')
+    execute_command(command)
 
 def lint(fix_paths, fix_exclude_paths = []):
     # TODO: actually check to see if gjslint exists?
@@ -117,7 +116,7 @@ def lint(fix_paths, fix_exclude_paths = []):
     if any(exclude_dirs):
         command += ['-e', ','.join(exclude_dirs)]
 
-    execute_command(command, 'gjslint')
+    execute_command(command)
 
 def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = False, closure_entry_point = None, language_in = None):
     command = ['python', CALCDEPS_PATH]
@@ -138,9 +137,10 @@ def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = Fal
     
     command += ["--output_file", compile_path]
     
-    execute_command(command, 'compile')
+    execute_command(command)
 
 def invoke_command(function, args):
+    print colored('kbuild: ' + function.func_name, 'green')
     args = args.copy()
     argspec = inspect.getargspec(function)
     defined_args = argspec.args
