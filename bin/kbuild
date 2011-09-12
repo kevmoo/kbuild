@@ -163,8 +163,7 @@ def invoke_command(function, args):
     # or exit!
     for key in required_args:
         if key not in args:
-            print "missing '%s', yo" % key
-            sys.exit(1)
+            raise Exception("missing '%s', yo" % key)
 
     # Call function with the right args and only the right args
     function(**args)
@@ -195,12 +194,8 @@ def main():
 
     args = parser.parse_args()
 
-    try:
-        with open(args.buildfile) as bf:
-            config_values = yaml.load(bf)
-    except Exception as err:
-        print colored(err, 'red')
-        sys.exit(1)
+    with open(args.buildfile) as bf:
+        config_values = yaml.load(bf)
 
     config_values['debug'] = args.debug
     config_values['language_in'] = args.language_in
@@ -218,4 +213,8 @@ def main():
         invoke_command(func, config_values)
 
 if __name__ == '__main__':
-  main()
+    try:
+        main()
+    except Exception as err:
+        print colored(err, 'red')
+        sys.exit(1)
