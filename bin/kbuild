@@ -163,7 +163,7 @@ def invoke_command(function, args):
     # or exit!
     for key in required_args:
         if key not in args:
-            raise Exception("missing '%s', yo" % key)
+            raise Exception("'{0}' requires '{1}', which is missing from the config file".format(function.func_name, key))
 
     # Call function with the right args and only the right args
     function(**args)
