@@ -17,25 +17,29 @@ The **Closure Tools** let you build dependency files, compile your javascript, l
 
     usage: kbuild [-h] [--buildfile BUILDFILE] [--debug]
                   [--language_in {ECMASCRIPT3,ECMASCRIPT5,ECMASCRIPT5_STRICT}]
-                  [{deps,compile,build,fix,lint}]
+                  [--show_command]
+                  [{deps,compile,build,fix,lint,fb}]
 
     Prepare a closure-based javascript set.
 
     positional arguments:
-      {deps,compile,build,fix,lint}
-                            specify to either create a [deps] file, generate
-                            [compile]d output, run [fix]jsstyle, run gjs[lint], or
-                            [build] deps then compile (default: deps)
+      {deps,compile,build,fix,lint,fb}
+                            Specify to either create a [deps] file, generate
+                            [compile]d output, run [fix]jsstyle, run gjs[lint],
+                            [build] deps then compile, or [fb] to fix then build.
+                            (default: deps)
 
     optional arguments:
       -h, --help            show this help message and exit
       --buildfile BUILDFILE
-                            the file to parse (default: config.kb)
-      --debug               enable debug output when in compile mode (default:
+                            The yaml config file to use. (default: config.kb)
+      --debug, -d           Enable debug output when in compile mode. (default:
                             False)
       --language_in {ECMASCRIPT3,ECMASCRIPT5,ECMASCRIPT5_STRICT}
                             Sets what language spec that input sources conform.
                             (default: ECMASCRIPT5_STRICT)
+      --show_command, -sc   Show the command line that is run for the given
+                            options. (default: False)
 
 ### Requirements
 
