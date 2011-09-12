@@ -167,7 +167,9 @@ def invoke_command(function, args):
     function(**args)
 
 def main():
-    parser = argparse.ArgumentParser(description='Prepare a closure-based javascript set.')
+    parser = argparse.ArgumentParser(
+        description='Prepare a closure-based javascript set.',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('target',
         default='deps',
