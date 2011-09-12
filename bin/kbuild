@@ -177,8 +177,8 @@ def main():
     parser.add_argument('target',
         default='deps',
         nargs = '?',
-        choices=['deps','compile','both','fix','lint'],
-        help='specify to either create a deps file, compile, or both')
+        choices=['deps','compile','build','fix','lint'],
+        help='specify to either create a [deps] file, generate [compile]d output, run [fix]jsstyle, run gjs[lint], or [build] deps then compile')
 
     parser.add_argument('--buildfile',
         default='config.kb',
@@ -209,7 +209,7 @@ def main():
         funcs = [make_deps]
     elif args.target == 'compile':
         funcs = [compile]
-    elif args.target == 'both':
+    elif args.target == 'build':
         funcs = [make_deps, compile]
     elif args.target == 'fix':
         funcs = [fix]
