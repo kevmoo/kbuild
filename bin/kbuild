@@ -177,24 +177,25 @@ def main():
         default='deps',
         nargs = '?',
         choices=['deps','compile','build','fix','lint','fb'],
-        help='specify to either create a [deps] file, generate [compile]d output, run [fix]jsstyle, run gjs[lint], [build] deps then compile, or [fb] to fix then build')
+        help='Specify to either create a [deps] file, generate [compile]d output, run [fix]jsstyle, run gjs[lint], [build] deps then compile, or [fb] to fix then build.')
 
     parser.add_argument('--buildfile',
         default='config.kb',
-        help='the file to parse')
+        help='The yaml config file to use.')
 
-    parser.add_argument('--debug',
+    parser.add_argument('--debug', '-d',
         action='store_true',
-        help='enable debug output when in compile mode')
+        help='Enable debug output when in compile mode.')
 
     parser.add_argument('--language_in',
         default='ECMASCRIPT5_STRICT',
         choices=['ECMASCRIPT3', 'ECMASCRIPT5', 'ECMASCRIPT5_STRICT'],
         help='Sets what language spec that input sources conform.')
 
-    parser.add_argument('--show_command',
+    parser.add_argument('--show_command', '-sc',
         action='store_true',
-        help='show the command line that is run for the given options')
+        dest='show_command',
+        help='Show the command line that is run for the given options.')
 
     args = parser.parse_args()
 
