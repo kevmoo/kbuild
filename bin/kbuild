@@ -176,7 +176,7 @@ def main():
         help='specify to either create a deps file, compile, or both')
 
     parser.add_argument('--buildfile',
-        default='default.kbuild',
+        default='config.kb',
         help='the file to parse')
 
     parser.add_argument('--debug',
