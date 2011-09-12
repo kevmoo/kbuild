@@ -141,6 +141,7 @@ def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = Fal
     execute_command(command, 'compile')
 
 def invoke_command(function, args):
+    args = args.copy()
     argspec = inspect.getargspec(function)
     defined_args = argspec.args
 
@@ -176,8 +177,8 @@ def main():
     parser.add_argument('target',
         default='deps',
         nargs = '?',
-        choices=['deps','compile','build','fix','lint'],
-        help='specify to either create a [deps] file, generate [compile]d output, run [fix]jsstyle, run gjs[lint], or [build] deps then compile')
+        choices=['deps','compile','build','fix','lint','fb'],
+        help='specify to either create a [deps] file, generate [compile]d output, run [fix]jsstyle, run gjs[lint], [build] deps then compile, or [fb] to fix then build')
 
     parser.add_argument('--buildfile',
         default='config.kb',
@@ -196,30 +197,25 @@ def main():
 
     try:
         with open(args.buildfile) as bf:
-            ybf = yaml.load(bf)
+            config_values = yaml.load(bf)
     except Exception as err:
         print colored(err, 'red')
         sys.exit(1)
 
-    ybf['debug'] = args.debug
-    ybf['language_in'] = args.language_in
+    config_values['debug'] = args.debug
+    config_values['language_in'] = args.language_in
 
-    if args.target == 'deps':
-        funcs = [make_deps]
-    elif args.target == 'compile':
-        funcs = [compile]
-    elif args.target == 'build':
-        funcs = [make_deps, compile]
-    elif args.target == 'fix':
-        funcs = [fix]
-    elif args.target == 'lint':
-        funcs = [lint]
-    else:
-        print "Not sure what to do..."
-        sys.exit(1)
+    funcs = {
+        'deps':[make_deps],
+        'compile':[compile],
+        'build':[make_deps, compile],
+        'fb':[fix,make_deps,compile],
+        'fix':[fix],
+        'lint':[lint]
+    }[args.target]
 
     for func in funcs:
-        invoke_command(func, ybf.copy())
+        invoke_command(func, config_values)
 
 if __name__ == '__main__':
   main()
