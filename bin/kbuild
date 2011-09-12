@@ -6,12 +6,15 @@ import sys
 from  os import path
 import inspect
 import yaml
+from termcolor import colored
 
 LIBEXEC_DIR   = path.abspath(path.join(path.dirname(path.realpath(__file__)), '..', 'libexec'))
 CALCDEPS_PATH = path.join(LIBEXEC_DIR, 'calcdeps.py')
 COMPILER_PATH = path.join(LIBEXEC_DIR, 'closure-compiler-svn1412.jar')
 
-def execute_command(command):
+def execute_command(command, message = None):
+    if message:
+        print colored(message, 'green')
     subprocess.Popen(command, stdout=sys.stdout).communicate()
 
 def get_compiler_flags(base_path, debug = False, closure_entry_point = None, language_in = None):
@@ -60,7 +63,7 @@ def make_deps(base_path, js_paths, deps_path):
     
     command += ["--output_file", deps_path]
     
-    execute_command(command)
+    execute_command(command, 'Generating deps file')
 
 def fix(fix_paths, fix_exclude_paths = []):
     # TODO: actually check to see if fixjsstyle exists?
@@ -90,7 +93,7 @@ def fix(fix_paths, fix_exclude_paths = []):
     command += fix_dirs
     command += fix_files
 
-    execute_command(command)
+    execute_command(command, 'Running fixjsstyle...')
 
 def lint(fix_paths, fix_exclude_paths = []):
     # TODO: actually check to see if gjslint exists?
@@ -115,7 +118,7 @@ def lint(fix_paths, fix_exclude_paths = []):
     if any(exclude_dirs):
         command += ['-e', ','.join(exclude_dirs)]
 
-    execute_command(command)
+    execute_command(command, 'Running gjslint...')
 
 def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = False, closure_entry_point = None, language_in = None):
     command = ['python', CALCDEPS_PATH]
@@ -136,7 +139,7 @@ def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = Fal
     
     command += ["--output_file", compile_path]
     
-    execute_command(command)
+    execute_command(command, 'Compiling...')
 
 def invoke_command(function, args):
     argspec = inspect.getargspec(function)
@@ -196,7 +199,7 @@ def main():
         with open(args.buildfile) as bf:
             ybf = yaml.load(bf)
     except Exception as err:
-        print err
+        print colored(err, 'red')
         sys.exit(1)
 
     ybf['debug'] = args.debug
