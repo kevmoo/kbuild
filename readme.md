@@ -9,7 +9,7 @@ The **Closure Tools** let you build dependency files, compile your javascript, l
 
 ...but you end up passing a **lot** of command line parameters to each.
 
-`kbuild` lets you define a single **yaml** file (`default.kbuild`) in the root of your project to make using these tools a lot easier.
+`kbuild` lets you define a single **yaml** file (`config.kb`) in the root of your project to make using these tools a lot easier.
 
 \* If you install **closure_linter**. See below.
 
@@ -17,21 +17,25 @@ The **Closure Tools** let you build dependency files, compile your javascript, l
 
     usage: kbuild [-h] [--buildfile BUILDFILE] [--debug]
                   [--language_in {ECMASCRIPT3,ECMASCRIPT5,ECMASCRIPT5_STRICT}]
-                  [{deps,compile,both,fix,lint}]
+                  [{deps,compile,build,fix,lint}]
 
     Prepare a closure-based javascript set.
 
     positional arguments:
-      {deps,compile,both,fix,lint}
-                            specify to either create a deps file, compile, or both
+      {deps,compile,build,fix,lint}
+                            specify to either create a [deps] file, generate
+                            [compile]d output, run [fix]jsstyle, run gjs[lint], or
+                            [build] deps then compile (default: deps)
 
     optional arguments:
       -h, --help            show this help message and exit
       --buildfile BUILDFILE
-                            the file to parse
-      --debug               enable debug output when in compile mode
+                            the file to parse (default: config.kb)
+      --debug               enable debug output when in compile mode (default:
+                            False)
       --language_in {ECMASCRIPT3,ECMASCRIPT5,ECMASCRIPT5_STRICT}
                             Sets what language spec that input sources conform.
+                            (default: ECMASCRIPT5_STRICT)
 
 ### Requirements
 
@@ -52,7 +56,7 @@ If you're cloning these locally, make sure you sync up all of the submodules bef
 * The [Box2d Demo site](https://github.com/thinkpixellab/box2dWeb)
 * [Agent 008 Ball](https://github.com/thinkpixellab/agent8ball)
 
-### default.kbuild file from ThinkQR
+### config.kb file from ThinkQR
 
     inputs:
       - js/app/application.js
