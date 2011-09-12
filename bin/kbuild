@@ -136,7 +136,7 @@ def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = Fal
     
     return command
 
-def invoke_command(function, args):
+def invoke_command(function, args, show_command = False):
     print colored('kbuild: ' + function.func_name, 'green')
     args = args.copy()
     argspec = inspect.getargspec(function)
@@ -164,6 +164,8 @@ def invoke_command(function, args):
 
     # Call function with the right args and only the right args
     command = function(**args)
+    if show_command:
+        print colored(' '.join(command), 'yellow')
     subprocess.Popen(command, stdout=sys.stdout).communicate()
 
 def main():
@@ -190,6 +192,10 @@ def main():
         choices=['ECMASCRIPT3', 'ECMASCRIPT5', 'ECMASCRIPT5_STRICT'],
         help='Sets what language spec that input sources conform.')
 
+    parser.add_argument('--show_command',
+        action='store_true',
+        help='show the command line that is run for the given options')
+
     args = parser.parse_args()
 
     with open(args.buildfile) as bf:
@@ -208,7 +214,7 @@ def main():
     }[args.target]
 
     for func in funcs:
-        invoke_command(func, config_values)
+        invoke_command(func, config_values, args.show_command)
 
 if __name__ == '__main__':
     try:
