@@ -45,7 +45,8 @@ The **Closure Tools** let you build dependency files, compile your javascript, l
 
 * **java** - Tested with 1.6
 * **python** - 2.7 is required
-    * **yaml** - `pip install PyYAML`
+    * **yaml** - `pip install PyYAML` - *for parsing the config file*
+    * **termcolor** - `pip install termcolor` - *to enable pretty output of info and errors*
     * **closure_linter** (optional) - `pip install http://closure-linter.googlecode.com/files/closure_linter-2.3.tar.gz`
         * enables `kbuild fix` and `kbuild lint`
 
