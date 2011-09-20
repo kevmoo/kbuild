@@ -19,7 +19,7 @@ class Kbuild < Formula
       * termcolor - 'pip install termcolor'
       * closure_linter (optional)
         * enables `kbuild fix` and `kbuild lint`
-        * `pip install http://closure-linter.googlecode.com/files/closure_linter-2.3.tar.gz`
+        * `pip install http://closure-linter.googlecode.com/files/closure_linter-2.3.1.tar.gz`
     EOS
   end
 
