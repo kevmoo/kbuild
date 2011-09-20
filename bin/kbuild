@@ -10,7 +10,7 @@ from termcolor import colored
 
 LIBEXEC_DIR   = path.abspath(path.join(path.dirname(path.realpath(__file__)), '..', 'libexec'))
 CALCDEPS_PATH = path.join(LIBEXEC_DIR, 'calcdeps.py')
-COMPILER_PATH = path.join(LIBEXEC_DIR, 'closure-compiler-svn1431.jar')
+COMPILER_PATH = path.join(LIBEXEC_DIR, 'closure-compiler-svn1449.jar')
 
 def get_compiler_flags(base_path, debug = False, closure_entry_point = None, language_in = None):
     compilerflags  = []
