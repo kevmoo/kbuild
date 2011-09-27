@@ -9,10 +9,22 @@ import yaml
 from termcolor import colored
 
 LIBEXEC_DIR   = path.abspath(path.join(path.dirname(path.realpath(__file__)), '..', 'libexec'))
-CALCDEPS_PATH = path.join(LIBEXEC_DIR, 'calcdeps.py')
 COMPILER_PATH = path.join(LIBEXEC_DIR, 'closure-compiler-svn1449.jar')
 
-def get_compiler_flags(base_path, debug = False, closure_entry_point = None, language_in = None):
+def get_closurebuilder_path(closure_path):
+    return path.join(closure_path, 'closure', 'bin', 'build', 'closurebuilder.py')
+
+def get_depswriter_path(closure_path):
+    return path.join(closure_path, 'closure', 'bin', 'build', 'depswriter.py')
+
+def get_goog_basejs_path(closure_path):
+    return path.join(closure_path, 'closure', 'goog', 'base.js')
+
+def get_closure_roots(closure_path):
+    roots = [path.join('third_party', 'closure', 'goog'), path.join('closure', 'goog')]
+    return [path.join(closure_path, p) for p in roots]
+
+def get_compiler_flags(closure_path, debug = False, closure_entry_point = None, language_in = None):
     compilerflags  = []
     compilerflags += ["--compilation_level=ADVANCED_OPTIMIZATIONS"]
     compilerflags += ["--summary_detail_level=3"]
@@ -35,19 +47,25 @@ def get_compiler_flags(base_path, debug = False, closure_entry_point = None, lan
     # to eliminate errors about unfound closure dependencies
     # http://groups.google.com/group/closure-compiler-discuss/msg/7d089cc101a2cf00?pli=1
     # http://code.google.com/p/closure-library/issues/detail?id=142
-    deps_path = path.join(base_path, 'goog', 'deps.js')
+    deps_path = path.join(closure_path, 'closure', 'goog', 'deps.js')
     if path.isfile(deps_path):
         compilerflags += ['--js=%s' % deps_path]
 
     return compilerflags
 
-def make_deps(base_path, js_paths, deps_path):
-    command = ['python', CALCDEPS_PATH]
-    command += ['--dep', base_path]
-    command += ["-o", 'deps']
+def _get_deps_pair(base_file_path, root_path):
+    base_dir_path = path.dirname(base_file_path)
+    relative_path = path.relpath(root_path, base_dir_path)
+    return '{0} {1}'.format(root_path, relative_path)
+
+def make_deps(closure_path, js_paths, deps_path):
+    command = ['python', get_depswriter_path(closure_path)]
     
-    for path in js_paths:
-        command += ['-p', path]
+    for p in js_paths:
+        if path.isdir(p):
+            command += ['--root_with_prefix=%s' % _get_deps_pair(get_goog_basejs_path(closure_path), p)]
+        elif path.isfile(p):
+            command += [p]
     
     command += ["--output_file", deps_path]
     
@@ -108,22 +126,25 @@ def lint(fix_paths, fix_exclude_paths = []):
 
     return command
 
-def compile(base_path, js_paths, inputs, compile_path, externs = [], debug = False, closure_entry_point = None, language_in = None):
-    command = ['python', CALCDEPS_PATH]
+def compile(closure_path, js_paths, inputs, compile_path, externs = [], debug = False, closure_entry_point = None, language_in = None):
+    command = ['python', get_closurebuilder_path(closure_path)]
     command += ['-o', 'compiled']
     command += ['--compiler_jar', COMPILER_PATH]
 
-    for flag in get_compiler_flags(base_path, debug, closure_entry_point, language_in):
+    for flag in get_compiler_flags(closure_path, debug, closure_entry_point, language_in):
         command += ['-f', flag]
     
     for extern in externs:
         command += ['-f', "--externs=%s" % extern]
-    
-    for path in js_paths:
-        command += ['-p', path]
 
-    for path in inputs:
-        command += ['-i', path]
+    for p in get_closure_roots(closure_path):
+        command += ['--root', p]
+    
+    for p in js_paths:
+        command += ['--root', p]
+
+    for p in inputs:
+        command += ['-i', p]
     
     command += ["--output_file", compile_path]
     
