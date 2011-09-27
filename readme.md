@@ -63,14 +63,18 @@ If you're cloning these locally, make sure you sync up all of the submodules bef
 
 ### config.kb file from ThinkQR
 
+    # kbuild file - https://github.com/kevmoo/kbuild
+    closure_path: js/closure
     inputs:
       - js/app/application.js
-    base_path: js/closure/closure
     js_paths:
       - js/app
       - js/pl/src
-      - js/closure/closure
     deps_path: js/deps.js
     compile_path: js/compiled.js
     externs:
       - js/externs/jquery-1.6.js
+    fix_paths:
+      - js/app
+      - js/pl/src/
+      - js/loader.js
