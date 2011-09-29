@@ -9,7 +9,7 @@ import yaml
 from termcolor import colored
 
 LIBEXEC_DIR   = path.abspath(path.join(path.dirname(path.realpath(__file__)), '..', 'libexec'))
-COMPILER_PATH = path.join(LIBEXEC_DIR, 'closure-compiler-svn1449.jar')
+COMPILER_PATH = path.join(LIBEXEC_DIR, 'closure-compiler-svn1465.jar')
 
 def get_closurebuilder_path(closure_path):
     return path.join(closure_path, 'closure', 'bin', 'build', 'closurebuilder.py')
