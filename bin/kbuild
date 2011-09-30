@@ -7,9 +7,16 @@ from  os import path
 import inspect
 import yaml
 from termcolor import colored
+import glob
 
 LIBEXEC_DIR   = path.abspath(path.join(path.dirname(path.realpath(__file__)), '..', 'libexec'))
-COMPILER_PATH = path.join(LIBEXEC_DIR, 'closure-compiler-svn1465.jar')
+
+compiler_search_path = path.join(LIBEXEC_DIR, 'closure-compiler-*.jar')
+compilers = glob.glob(compiler_search_path)
+if len(compilers) == 1:
+    COMPILER_PATH = compilers[0]
+else:
+    raise Exception("Couldn't find one compiler in '%s'" % compiler_search_path)
 
 def get_closurebuilder_path(closure_path):
     return path.join(closure_path, 'closure', 'bin', 'build', 'closurebuilder.py')
