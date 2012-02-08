@@ -9,7 +9,7 @@ import yaml
 from termcolor import colored
 import glob
 
-LIBEXEC_DIR   = path.abspath(path.join(path.dirname(path.realpath(__file__)), '..', 'libexec'))
+LIBEXEC_DIR = path.abspath(path.join(path.dirname(path.realpath(__file__)), '..', 'libexec'))
 
 compiler_search_path = path.join(LIBEXEC_DIR, 'closure-compiler-*.jar')
 compilers = glob.glob(compiler_search_path)
@@ -18,21 +18,26 @@ if len(compilers) == 1:
 else:
     raise Exception("Couldn't find one compiler in '%s'" % compiler_search_path)
 
+
 def get_closurebuilder_path(closure_path):
     return path.join(closure_path, 'closure', 'bin', 'build', 'closurebuilder.py')
+
 
 def get_depswriter_path(closure_path):
     return path.join(closure_path, 'closure', 'bin', 'build', 'depswriter.py')
 
+
 def get_goog_basejs_path(closure_path):
     return path.join(closure_path, 'closure', 'goog', 'base.js')
+
 
 def get_closure_roots(closure_path):
     roots = [path.join('third_party', 'closure', 'goog'), path.join('closure', 'goog')]
     return [path.join(closure_path, p) for p in roots]
 
-def get_compiler_flags(closure_path, debug = False, closure_entry_point = None, language_in = None):
-    compilerflags  = []
+
+def get_compiler_flags(closure_path, debug=False, closure_entry_point=None, language_in=None):
+    compilerflags = []
     compilerflags += ["--compilation_level=ADVANCED_OPTIMIZATIONS"]
     compilerflags += ["--summary_detail_level=3"]
     compilerflags += ["--warning_level=VERBOSE"]
@@ -60,25 +65,28 @@ def get_compiler_flags(closure_path, debug = False, closure_entry_point = None, 
 
     return compilerflags
 
+
 def _get_deps_pair(base_file_path, root_path):
     base_dir_path = path.dirname(base_file_path)
     relative_path = path.relpath(root_path, base_dir_path)
     return '{0} {1}'.format(root_path, relative_path)
 
+
 def make_deps(closure_path, js_paths, deps_path):
     command = ['python', get_depswriter_path(closure_path)]
-    
+
     for p in js_paths:
         if path.isdir(p):
             command += ['--root_with_prefix=%s' % _get_deps_pair(get_goog_basejs_path(closure_path), p)]
         elif path.isfile(p):
             command += [p]
-    
-    command += ["--output_file", deps_path]
-    
-    return command;
 
-def fix(fix_paths, fix_exclude_paths = []):
+    command += ["--output_file", deps_path]
+
+    return command
+
+
+def fix(fix_paths, fix_exclude_paths=[]):
     # TODO: actually check to see if fixjsstyle exists?
     command = ['fixjsstyle']
 
@@ -108,7 +116,8 @@ def fix(fix_paths, fix_exclude_paths = []):
 
     return command
 
-def lint(fix_paths, fix_exclude_paths = []):
+
+def lint(fix_paths, fix_exclude_paths=[]):
     # TODO: actually check to see if gjslint exists?
     command = ['gjslint']
 
@@ -133,31 +142,33 @@ def lint(fix_paths, fix_exclude_paths = []):
 
     return command
 
-def compile(closure_path, js_paths, inputs, compile_path, externs = [], debug = False, closure_entry_point = None, language_in = None):
+
+def compile(closure_path, js_paths, inputs, compile_path, externs=[], debug=False, closure_entry_point=None, language_in=None):
     command = ['python', get_closurebuilder_path(closure_path)]
     command += ['-o', 'compiled']
     command += ['--compiler_jar', COMPILER_PATH]
 
     for flag in get_compiler_flags(closure_path, debug, closure_entry_point, language_in):
         command += ['-f', flag]
-    
+
     for extern in externs:
         command += ['-f', "--externs=%s" % extern]
 
     for p in get_closure_roots(closure_path):
         command += ['--root', p]
-    
+
     for p in js_paths:
         command += ['--root', p]
 
     for p in inputs:
         command += ['-i', p]
-    
+
     command += ["--output_file", compile_path]
-    
+
     return command
 
-def invoke_command(function, args, show_command = False):
+
+def invoke_command(function, args, show_command=False):
     print colored('kbuild: ' + function.func_name, 'green')
     args = args.copy()
     argspec = inspect.getargspec(function)
@@ -189,6 +200,7 @@ def invoke_command(function, args, show_command = False):
         print colored(' '.join(command), 'yellow')
     subprocess.Popen(command, stdout=sys.stdout).communicate()
 
+
 def main():
     parser = argparse.ArgumentParser(
         description='Prepare a closure-based javascript set.',
@@ -196,8 +208,8 @@ def main():
 
     parser.add_argument('target',
         default='deps',
-        nargs = '?',
-        choices=['deps','compile','build','fix','lint','fb'],
+        nargs='?',
+        choices=['deps', 'compile', 'build', 'fix', 'lint', 'fb'],
         help='Specify to either create a [deps] file, generate [compile]d output, run [fix]jsstyle, run gjs[lint], [build] deps then compile, or [fb] to fix then build.')
 
     parser.add_argument('--buildfile',
@@ -227,12 +239,12 @@ def main():
     config_values['language_in'] = args.language_in
 
     funcs = {
-        'deps':[make_deps],
-        'compile':[compile],
-        'build':[make_deps, compile],
-        'fb':[fix,make_deps,compile],
-        'fix':[fix],
-        'lint':[lint]
+        'deps': [make_deps],
+        'compile': [compile],
+        'build': [make_deps, compile],
+        'fb': [fix, make_deps, compile],
+        'fix': [fix],
+        'lint': [lint]
     }[args.target]
 
     for func in funcs:
