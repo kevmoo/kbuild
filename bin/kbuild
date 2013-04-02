@@ -114,7 +114,7 @@ def make_deps(closure_path, js_paths, deps_path):
 
 def fix(fix_paths, fix_exclude_paths=[]):
     # TODO: actually check to see if fixjsstyle exists?
-    command = ['fixjsstyle']
+    command = ['fixjsstyle', '--strict']
 
     fix_files = []
     fix_dirs = []
