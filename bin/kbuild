@@ -43,10 +43,36 @@ def get_compiler_flags(closure_path, debug=False, closure_entry_point=None, lang
     compilerflags += ["--warning_level=VERBOSE"]
     compilerflags += ['--generate_exports']
 
-    for error in ['checkRegExp', 'checkVars', 'deprecated', 'invalidCasts', 'missingProperties', 'undefinedVars', 'visibility', 'uselessCode', 'const', 'duplicate', 'es5Strict', 'invalidCasts', 'constantProperty', 'checkTypes', 'ambiguousFunctionDecl']:
+    for error in ['ambiguousFunctionDecl',
+        'checkRegExp',
+        'checkTypes',
+        'checkVars',
+        'const', 
+        'constantProperty',
+        'deprecated',
+        'duplicateMessage',
+        'es5Strict',
+        'invalidCasts',
+        'misplacedTypeAnnotation',
+        'missingProperties',
+        'undefinedVars',
+        'uselessCode',
+        'visibility']:
         compilerflags += ['--jscomp_error=%s' % error]
 
-    for warning in ['accessControls', 'fileoverviewTags', 'nonStandardJsDocs', 'strictModuleDepCheck', 'unknownDefines']:
+    for warning in [
+        'accessControls',
+        'ambiguousFunctionDecl',
+        'externsValidation',
+        'fileoverviewTags',
+        'globalThis',
+        'nonStandardJsDocs',
+        'suspiciousCode',
+        'strictModuleDepCheck',
+        'typeInvalidation',
+        'undefinedNames',
+        'unknownDefines'
+        ]:
         compilerflags += ['--jscomp_warning=%s' % warning]
 
     if debug:
