@@ -47,7 +47,7 @@ def get_compiler_flags(closure_path, debug=False, closure_entry_point=None, lang
         'checkRegExp',
         'checkTypes',
         'checkVars',
-        'const', 
+        'const',
         'constantProperty',
         'deprecated',
         'duplicateMessage',
