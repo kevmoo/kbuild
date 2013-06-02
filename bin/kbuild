@@ -44,12 +44,12 @@ def get_compiler_flags(closure_path, debug=False, closure_entry_point=None, lang
     compilerflags += ['--generate_exports']
 
     for error in ['ambiguousFunctionDecl',
+        'checkProvides',
         'checkRegExp',
         'checkTypes',
         'checkVars',
         'const',
         'constantProperty',
-        'deprecated',
         'duplicateMessage',
         'es5Strict',
         'invalidCasts',
@@ -63,6 +63,7 @@ def get_compiler_flags(closure_path, debug=False, closure_entry_point=None, lang
     for warning in [
         'accessControls',
         'ambiguousFunctionDecl',
+        'deprecated',
         'externsValidation',
         'fileoverviewTags',
         'globalThis',
