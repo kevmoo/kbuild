@@ -9,9 +9,8 @@ import yaml
 from termcolor import colored
 import glob
 
-LIBEXEC_DIR = path.abspath(path.join(path.dirname(path.realpath(__file__)), '..', 'libexec'))
-
-compiler_search_path = path.join(LIBEXEC_DIR, 'closure-compiler-*.jar')
+BREW_PREFIX = subprocess.check_output(['brew', '--prefix']).strip()
+compiler_search_path = path.join(BREW_PREFIX, 'Cellar/closure-compiler', '*', 'libexec/build/compiler.jar')
 compilers = glob.glob(compiler_search_path)
 if len(compilers) == 1:
     COMPILER_PATH = compilers[0]
